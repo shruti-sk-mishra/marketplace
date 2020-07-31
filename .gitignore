@@ -1,3 +1,13 @@
+# Intellij
+.idea/
+**/.DS_Store
+.DS_Store
+.classpath
+.project
+.settings/
+target/
+practice.iml
+
 # Compiled class file
 *.class
 
