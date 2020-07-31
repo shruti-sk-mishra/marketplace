@@ -1,22 +1,48 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.2.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'jacoco'
+	id 'maven-publish'
+	id 'org.springframework.boot' version '2.1.4.RELEASE'
 }
 
-group = 'com.shr'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+apply plugin: 'io.spring.dependency-management'
 
 repositories {
 	mavenCentral()
 }
 
+configurations {
+	all {
+		exclude group: 'junit', module: 'junit'
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+
+	compile 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.1.5.RELEASE'
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb'
+
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+
+	implementation 'org.jeasy:easy-random-core:4.0.0'
+
+	testImplementation 'org.hamcrest:hamcrest:2.2'
+	testImplementation 'com.spotify:hamcrest-future:1.1.4'
+	testImplementation 'com.spotify:hamcrest-optional:1.1.4'
+
+	testImplementation 'org.mockito:mockito-core:2.28.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+	testImplementation 'org.mockito:mockito-junit-jupiter:2.28.2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+	testImplementation 'org.apache.httpcomponents:httpclient:4.5.6'
+	testImplementation 'io.github.glytching:junit-extensions:2.3.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
