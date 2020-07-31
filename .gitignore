@@ -8,6 +8,8 @@
 target/
 practice.iml
 
+.gradle/
+
 # Compiled class file
 *.class
 
