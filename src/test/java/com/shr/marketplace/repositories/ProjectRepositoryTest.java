@@ -19,10 +19,7 @@ import org.springframework.data.domain.Sort;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.core.Is.is;
@@ -46,7 +43,6 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
     void shouldCreateGenericProject(@Random Project project) {
        final var savedProject = projectRepository.create(project);
 
-       System.out.println(savedProject);
        assertNotNull(savedProject.getId());
        assertNotNull(projectRepository.findById(savedProject.getId()));
     }
@@ -113,6 +109,35 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
         List<Project> activeProjects = projectRepository.findActiveProjectsByExpiryDate(startDate, endDate, pageRequest);
 
         assertThat(activeProjects.size(), is(10));
+    }
+
+    @Test
+    void shouldGetAllTheActiveProjects() throws ParseException, IllegalAccessException {
+        final var dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        final var startDate = dateFormat.parse("10-07-2020 00:00:00");
+        final var endDate = dateFormat.parse("11-07-2020 23:59:59");
+
+        final var projects = createProjectsListCreatedDuringAnInterval(startDate, endDate, 10);
+
+        final var futureStartCalendar = Calendar.getInstance();
+        futureStartCalendar.setTime(new Date());
+        futureStartCalendar.add(Calendar.DATE, 10);
+        final var futureStartDate = futureStartCalendar.getTime();
+
+        final var futureEndCalendar = Calendar.getInstance();
+        futureEndCalendar.setTime(new Date());
+        futureEndCalendar.add(Calendar.DATE, 11);
+        final var futureEndDate = futureEndCalendar.getTime();
+
+        final var activeProjects = createProjectsListCreatedDuringAnInterval(futureStartDate, futureEndDate, 10);
+        projects.addAll(activeProjects);
+
+        projectRepository.saveAll(projects);
+
+        final var pageRequest = PageRequest.of(0, 20, Sort.by(Project.Fields.expiresAt).descending());
+        List<Project> retrievedActiveProjects = projectRepository.findActiveProjects(pageRequest);
+
+        assertThat(retrievedActiveProjects.size(), is(10));
     }
 
     private Set<Project> createProjectsListCreatedDuringAnInterval(Date startDate, Date endDate, int size) throws IllegalAccessException {
