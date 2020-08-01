@@ -10,8 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,7 +30,7 @@ class BuyerRepositoryTest extends BaseRepositoryTest {
     @Test
     void shouldCreateBuyer(@Random Buyer buyer) {
 
-        final var savedBuyer = buyerRepository.save(buyer);
+        final var savedBuyer = buyerRepository.create(buyer);
 
         assertNotNull(savedBuyer.getId());
         assertNotNull(buyerRepository.findById(savedBuyer.getId()));
@@ -41,7 +39,7 @@ class BuyerRepositoryTest extends BaseRepositoryTest {
     @Test
     void shouldGetBuyerById(@Random Buyer buyer) {
 
-        final var savedBuyer = buyerRepository.save(buyer);
+        final var savedBuyer = buyerRepository.create(buyer);
         assertNotNull(savedBuyer.getId());
         assertNotNull(buyerRepository.findById(savedBuyer.getId()));
     }
@@ -52,7 +50,7 @@ class BuyerRepositoryTest extends BaseRepositoryTest {
         final var buyerName = "Buyer's name";
         final var buyer = new Buyer(buyerName);
 
-        final var savedBuyer = buyerRepository.save(buyer);
+        final var savedBuyer = buyerRepository.create(buyer);
         assertNotNull(savedBuyer.getId());
         assertNotNull(buyerRepository.findByName(savedBuyer.getName()));
     }
@@ -61,23 +59,20 @@ class BuyerRepositoryTest extends BaseRepositoryTest {
     void shouldUpdateBuyer() throws IllegalAccessException {
 
         final var buyer = new Buyer("Buyer's name");
-        final var savedBuyer = buyerRepository.save(buyer);
+        final var savedBuyer = buyerRepository.create(buyer);
 
         assertNotNull(savedBuyer.getId());
         assertThat(savedBuyer.getName(), is(buyer.getName()));
 
         final var buyersNewName = "Buyer's new name";
 
-        Date oldDate = new Date(2020, 02, 21);
-        savedBuyer.setCreatedAt(oldDate);
         FieldUtils.getField(Buyer.class, "name", true)
                 .set(savedBuyer, buyersNewName);
 
 
-        buyerRepository.save(savedBuyer);
+        buyerRepository.update(savedBuyer);
 
         final var retrievedBuyer = buyerRepository.findById(savedBuyer.getId()).orElseThrow();;
         assertThat(retrievedBuyer.getName(), is(buyersNewName));
-        assertThat(retrievedBuyer.getCreatedAt(), is(oldDate));
     }
 }
