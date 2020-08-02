@@ -39,8 +39,8 @@ public class Project extends BaseDocument {
     @Field(Fields.expiresAt)
     private Date expiresAt;
 
-    @Field(Fields.wonBid)
-    private String wonBid;
+    @Field(Fields.selectedBid)
+    private String selectedBid;
 
     public Project(@NotBlank String name, @NotBlank ProjectType type,
                    @NotBlank String description) {
@@ -69,8 +69,8 @@ public class Project extends BaseDocument {
         return expiresAt;
     }
 
-    public String getWonBid() {
-        return wonBid;
+    public String getSelectedBid() {
+        return selectedBid;
     }
 
     public interface Fields {
@@ -80,7 +80,7 @@ public class Project extends BaseDocument {
         String description = "description";
         String requirements = "requirements";
         String expiresAt = "expiresAt";
-        String wonBid = "won_bid";
+        String selectedBid = "selectedBid";
     }
 
     public enum Status {
