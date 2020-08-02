@@ -82,4 +82,9 @@ public class Project extends BaseDocument {
         String expiresAt = "expiresAt";
         String wonBid = "won_bid";
     }
+
+    public enum Status {
+        ACTIVE, EXPIRED
+    }
+
 }

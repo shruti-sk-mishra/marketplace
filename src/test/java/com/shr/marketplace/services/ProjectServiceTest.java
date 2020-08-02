@@ -12,9 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -85,6 +86,26 @@ public class ProjectServiceTest {
         List<Project> retrievedActiveProjects = projectService.findActiveProjects(pageStart, pageSize);
 
         assertEquals(retrievedActiveProjects, activeProjects);
+    }
+
+    @Test
+    void shouldGetAllProjects() throws IllegalAccessException, ParseException {
+
+        final var dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        final var startDate = dateFormat.parse("10-07-2020 00:00:00");
+        final var endDate = dateFormat.parse("11-07-2020 23:59:59");
+        final var projects = createProjectsListCreatedDuringAnInterval(startDate, endDate, 10);
+
+        int pageStart = 0;
+        int pageSize = 10;
+        final var pageRequest = PageRequest.of(pageStart, pageSize, Sort.by(Project.Fields.expiresAt).descending());
+
+        Page<Project> page = new PageImpl<>(projects, pageRequest, pageSize);
+        when(projectRepository.findAll(pageRequest)).thenReturn(page);
+
+        List<Project> retrievedProjects = projectService.findAllProjects(pageStart, pageSize);
+        assertEquals(retrievedProjects, projects);
+
     }
 
     private List<Project> createProjectsListCreatedDuringAnInterval(Date startDate, Date endDate, int size) throws IllegalAccessException {
