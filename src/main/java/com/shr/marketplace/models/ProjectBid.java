@@ -47,6 +47,29 @@ public class ProjectBid extends BaseDocument {
         String wageType = "wageType";
     }
 
+    public ProjectBid(@NotBlank String projectId, @NotBlank String buyerId, @NotBlank double bidAmount, @NotBlank WageType wageType) {
+        this.projectId = projectId;
+        this.buyerId = buyerId;
+        this.bidAmount = bidAmount;
+        this.wageType = wageType;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public String getBuyerId() {
+        return buyerId;
+    }
+
+    public double getBidAmount() {
+        return bidAmount;
+    }
+
+    public WageType getWageType() {
+        return wageType;
+    }
+
     public enum WageType {
         FIXED, HOURLY
     }
