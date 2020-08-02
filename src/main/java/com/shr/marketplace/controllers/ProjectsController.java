@@ -15,7 +15,6 @@ import java.util.List;
  *
  * @author shruti.mishra
  */
-
 @RestController("projects")
 public class ProjectsController {
     private final ProjectService projectService;
