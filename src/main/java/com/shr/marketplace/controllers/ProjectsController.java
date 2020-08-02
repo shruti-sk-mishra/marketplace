@@ -25,8 +25,14 @@ public class ProjectsController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Project>> getActiveProjects(@RequestParam("pageStart") int pageStart,
-                                                           @RequestParam("pageSize") int pageSize) {
-        return ResponseEntity.ok(projectService.findActiveProjects(pageStart, pageSize));
+    public ResponseEntity<List<Project>> getActiveProjects(@RequestParam(name = "status", required = false) Project.Status status,
+                                                           @RequestParam(name = "pageStart", required = false, defaultValue = "0") int pageStart,
+                                                           @RequestParam(name = "pageSize", required = false, defaultValue = "100") int pageSize) {
+
+
+        if(status != null && status.equals(Project.Status.ACTIVE)) {
+            return ResponseEntity.ok(projectService.findActiveProjects(pageStart, pageSize));
+        }
+        return ResponseEntity.ok(projectService.findAllProjects(pageStart, pageSize));
     }
 }
