@@ -18,7 +18,12 @@ import java.util.Optional;
 @Service
 public class ProjectService {
 
-    private ProjectRepository projectRepository;
+
+    private final ProjectRepository projectRepository;
+
+    public ProjectService(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+    }
 
     public Project create(Project project) { return projectRepository.create(project); }
 
