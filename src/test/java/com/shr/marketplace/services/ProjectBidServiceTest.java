@@ -6,7 +6,6 @@ import com.shr.marketplace.exceptions.http.EntityExpiredException;
 import com.shr.marketplace.models.Project;
 import com.shr.marketplace.models.ProjectBid;
 import com.shr.marketplace.repositories.ProjectBidRepository;
-import com.shr.marketplace.repositories.ProjectRepository;
 import io.github.glytching.junit.extension.random.Random;
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -41,12 +40,6 @@ public class ProjectBidServiceTest extends BaseTest {
 
     @Mock
     private ProjectService projectService;
-
-    @Mock
-    private ProjectRepository projectRepository;
-
-
-
 
     @Test
     void shouldCreateProjectBid(@Random ProjectBid projectBidToBeSaved, @Random Project project) {

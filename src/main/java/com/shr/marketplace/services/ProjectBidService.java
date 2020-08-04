@@ -37,8 +37,8 @@ public class ProjectBidService {
         // Buyer should be able to place the bid only for the active projects
         final var project = projectService.findById(projectBid.getProjectId()).orElseThrow();
         if(!Project.Status.ACTIVE.equals(project.getStatus())) {
-            throw new EntityExpiredException(String.format("The project [%s] with id [%s] is expired and no longer available for bidding",
-                    project.getName(), project.getId()));
+            throw new EntityExpiredException(String.format("The project [%s] is not active and hence not available for bidding",
+                    project.getName()));
         }
         // check if buyer hasn't placed the bid for the particular project
         final var retrievedProjectBid = projectBidRepository.findOneByProjectIdAndBuyerId(projectBid.getProjectId(),projectBid.getBuyerId());
