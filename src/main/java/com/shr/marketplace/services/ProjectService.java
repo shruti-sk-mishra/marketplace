@@ -34,8 +34,8 @@ public class ProjectService {
         return projectRepository.findAll(pageRequest).getContent();
     }
 
-    public List<Project> findActiveProjects(int pageStart, int pageSize) {
+    public List<Project> findByStatus(Project.Status status, int pageStart, int pageSize) {
         final var pageRequest = PageRequest.of(pageStart, pageSize, Sort.by(Project.Fields.expiresAt).descending());
-        return projectRepository.findActiveProjects(pageRequest);
+        return projectRepository.findByStatus(status, pageRequest);
     }
 }

@@ -4,7 +4,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * Entity class for the bids placed against a project
@@ -31,11 +33,11 @@ public class ProjectBid extends BaseDocument {
     @Field(Fields.buyerId)
     private String buyerId;
 
-    @NotBlank
+    @Min(1)
     @Field(Fields.bidAmount)
     private  double bidAmount;
 
-    @NotBlank
+    @NotNull
     @Field(Fields.wageType)
     private WageType wageType;
 

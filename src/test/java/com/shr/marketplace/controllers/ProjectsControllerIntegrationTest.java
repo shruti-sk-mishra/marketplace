@@ -52,7 +52,7 @@ public class ProjectsControllerIntegrationTest extends BaseTest {
 
         int pageStart = 0;
         int pageSize = 10;
-        when(projectService.findActiveProjects(pageStart, pageSize)).thenReturn(activeProjects);
+        when(projectService.findByStatus(Project.Status.ACTIVE, pageStart, pageSize)).thenReturn(activeProjects);
 
         mockMvc.perform(get("/projects?status=ACTIVE&pageStart=" + pageStart + "&pageSize=" + pageSize ))
                 .andExpect(status().isOk())

@@ -56,7 +56,7 @@ public class ProjectsControllerTest extends BaseTest {
 
         int pageStart = 0;
         int pageSize = 10;
-        when(projectService.findActiveProjects(pageStart, pageSize)).thenReturn(activeProjects);
+        when(projectService.findByStatus(Project.Status.ACTIVE, pageStart, pageSize)).thenReturn(activeProjects);
         final var response = projectsController.getActiveProjects(Project.Status.ACTIVE, pageStart, pageSize);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

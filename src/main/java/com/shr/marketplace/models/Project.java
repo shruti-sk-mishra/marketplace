@@ -39,14 +39,18 @@ public class Project extends BaseDocument {
     @Field(Fields.expiresAt)
     private Date expiresAt;
 
-    @Field(Fields.selectedBid)
-    private String selectedBid;
+    @Field(Fields.selectedBidId)
+    private String selectedBidId;
+
+    @Field(Fields.status)
+    private Status status;
 
     public Project(@NotBlank String name, @NotBlank ProjectType type,
                    @NotBlank String description) {
         this.name = name;
         this.type = type;
         this.description = description;
+        status = Status.INACTIVE;
     }
 
     public String getName() {
@@ -69,8 +73,15 @@ public class Project extends BaseDocument {
         return expiresAt;
     }
 
-    public String getSelectedBid() {
-        return selectedBid;
+    public String getSelectedBidId() {
+        return selectedBidId;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    public Status getStatus() {
+        return status;
     }
 
     public interface Fields {
@@ -80,11 +91,12 @@ public class Project extends BaseDocument {
         String description = "description";
         String requirements = "requirements";
         String expiresAt = "expiresAt";
-        String selectedBid = "selectedBid";
+        String selectedBidId = "selectedBidId";
+        String status = "status";
     }
 
     public enum Status {
-        ACTIVE, EXPIRED
+        INACTIVE, ACTIVE, EXPIRED
     }
 
 }

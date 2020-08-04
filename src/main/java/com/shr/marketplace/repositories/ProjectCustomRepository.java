@@ -10,6 +10,5 @@ import java.util.List;
  * @author shruti.mishra
  */
 public interface ProjectCustomRepository {
-    List<Project> findActiveProjects(Pageable pageable);
     List<Project> findActiveProjectsByExpiryDate(Date startDate, Date endDate, Pageable pageable);
 }

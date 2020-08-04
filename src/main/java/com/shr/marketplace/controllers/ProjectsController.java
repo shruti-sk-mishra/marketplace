@@ -29,8 +29,8 @@ public class ProjectsController {
                                                            @RequestParam(name = "pageSize", required = false, defaultValue = "100") int pageSize) {
 
 
-        if(status != null && status.equals(Project.Status.ACTIVE)) {
-            return ResponseEntity.ok(projectService.findActiveProjects(pageStart, pageSize));
+        if(status != null) {
+            return ResponseEntity.ok(projectService.findByStatus(status, pageStart, pageSize));
         }
         return ResponseEntity.ok(projectService.findAllProjects(pageStart, pageSize));
     }

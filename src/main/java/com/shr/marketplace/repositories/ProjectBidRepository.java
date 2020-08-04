@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for ProjectBid entity
@@ -18,4 +19,6 @@ public interface ProjectBidRepository extends MongoRepository<ProjectBid, String
         CreateRepository<ProjectBid>, UpdateRepository<ProjectBid> {
 
     List<ProjectBid> findByProjectId(String projectId);
+
+    Optional<ProjectBid> findOneByProjectIdAndBuyerId(String projectId, String buyerId);
 }

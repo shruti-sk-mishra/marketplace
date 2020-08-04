@@ -81,9 +81,9 @@ public class ProjectServiceTest {
         int pageStart = 0;
         int pageSize = 10;
         final var pageRequest = PageRequest.of(pageStart, pageSize, Sort.by(Project.Fields.expiresAt).descending());
-        when(projectRepository.findActiveProjects(pageRequest)).thenReturn(activeProjects);
+        when(projectRepository.findByStatus(Project.Status.ACTIVE, pageRequest)).thenReturn(activeProjects);
 
-        List<Project> retrievedActiveProjects = projectService.findActiveProjects(pageStart, pageSize);
+        List<Project> retrievedActiveProjects = projectService.findByStatus(Project.Status.ACTIVE, pageStart, pageSize);
 
         assertEquals(retrievedActiveProjects, activeProjects);
     }

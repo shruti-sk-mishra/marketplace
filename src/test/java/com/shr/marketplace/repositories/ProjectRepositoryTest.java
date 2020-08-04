@@ -95,11 +95,11 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
         final var dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         final var startDate = dateFormat.parse("10-08-2020 00:00:00");
         final var endDate = dateFormat.parse("11-08-2020 23:59:59");
-        Set<Project> projects = createProjectsListCreatedDuringAnInterval(startDate, endDate, 20);
+        Set<Project> projects = createProjectsListCreatedDuringAnInterval(Project.Status.INACTIVE, startDate, endDate, 20);
 
         //add more projects which were added before 10-08-2020 00:00:00
-        Set<Project> oldProjects = createProjectsListCreatedDuringAnInterval(dateFormat.parse("08-08-2020 00:00:00"),
-                dateFormat.parse("09-08-2020 23:59:59"), 10);
+        Set<Project> oldProjects = createProjectsListCreatedDuringAnInterval(Project.Status.ACTIVE, dateFormat.parse("08-08-2020 00:00:00"),
+                dateFormat.parse("09-08-2020 23:59:59"), 5);
 
         projects.addAll(oldProjects);
 
@@ -117,7 +117,7 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
         final var startDate = dateFormat.parse("10-07-2020 00:00:00");
         final var endDate = dateFormat.parse("11-07-2020 23:59:59");
 
-        final var projects = createProjectsListCreatedDuringAnInterval(startDate, endDate, 10);
+        final var projects = createProjectsListCreatedDuringAnInterval(Project.Status.INACTIVE, startDate, endDate, 10);
 
         final var futureStartCalendar = Calendar.getInstance();
         futureStartCalendar.setTime(new Date());
@@ -129,18 +129,18 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
         futureEndCalendar.add(Calendar.DATE, 11);
         final var futureEndDate = futureEndCalendar.getTime();
 
-        final var activeProjects = createProjectsListCreatedDuringAnInterval(futureStartDate, futureEndDate, 10);
+        final var activeProjects = createProjectsListCreatedDuringAnInterval(Project.Status.ACTIVE, futureStartDate, futureEndDate, 10);
         projects.addAll(activeProjects);
 
         projectRepository.saveAll(projects);
 
         final var pageRequest = PageRequest.of(0, 20, Sort.by(Project.Fields.expiresAt).descending());
-        List<Project> retrievedActiveProjects = projectRepository.findActiveProjects(pageRequest);
+        List<Project> retrievedActiveProjects = projectRepository.findByStatus(Project.Status.ACTIVE, pageRequest);
 
         assertThat(retrievedActiveProjects.size(), is(10));
     }
 
-    private Set<Project> createProjectsListCreatedDuringAnInterval(Date startDate, Date endDate, int size) throws IllegalAccessException {
+    private Set<Project> createProjectsListCreatedDuringAnInterval(Project.Status status, Date startDate, Date endDate, int size) throws IllegalAccessException {
         final var projects = new LinkedHashSet<Project>();
 
         long startMillis = startDate.getTime();
@@ -148,8 +148,8 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
         for(int i = 1; i <= size; i++) {
             long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
             Project project = new Project("Project_" + i, ProjectType.SOFTWARE,"This is project " + i);
-            FieldUtils.getField(Project.class, "expiresAt", true)
-                    .set(project, new Date(randomMillisSinceEpoch));
+            FieldUtils.getField(Project.class, "expiresAt", true).set(project, new Date(randomMillisSinceEpoch));
+            FieldUtils.getField(Project.class, "status", true).set(project, status);
             projects.add(project);
         }
         return projects;

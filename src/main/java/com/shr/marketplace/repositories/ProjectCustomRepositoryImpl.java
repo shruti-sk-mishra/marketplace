@@ -23,13 +23,6 @@ public class ProjectCustomRepositoryImpl implements ProjectCustomRepository {
     }
 
     @Override
-    public List<Project> findActiveProjects(Pageable pageable) {
-        final var query = new Query();
-        query.addCriteria(Criteria.where(Project.Fields.expiresAt).gt(new Date()));
-        return mongoOperations.find(query.with(pageable), Project.class);
-    }
-
-    @Override
     public List<Project> findActiveProjectsByExpiryDate(Date startDate, Date endDate, Pageable pageable) {
         final var query = new Query();
         query.addCriteria(Criteria.where(Project.Fields.expiresAt).gte(startDate).lt(endDate));
