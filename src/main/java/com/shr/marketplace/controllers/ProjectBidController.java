@@ -2,6 +2,8 @@ package com.shr.marketplace.controllers;
 
 import com.shr.marketplace.models.ProjectBid;
 import com.shr.marketplace.services.ProjectBidService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,8 @@ public class ProjectBidController {
 
     private final ProjectBidService projectBidService;
 
+    private final Logger logger = LoggerFactory.getLogger(ProjectBidController.class);
+
     public ProjectBidController(ProjectBidService projectBidService) {
         this.projectBidService = projectBidService;
     }
@@ -26,7 +30,9 @@ public class ProjectBidController {
     @PostMapping
     public ResponseEntity<ProjectBid> create(@Valid @RequestBody ProjectBid projectBid) {
 
+        logger.info("Attempting to place the bid={}", projectBid);
         final var createdProjectBid = projectBidService.create(projectBid);
+        logger.info("Project bid created={}", createdProjectBid);
         return new ResponseEntity<>(createdProjectBid, HttpStatus.CREATED);
     }
 
