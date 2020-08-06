@@ -35,11 +35,19 @@ public class ProjectController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@Valid @RequestBody Project project) {
+    public ResponseEntity<Void> update(@RequestBody Project project) {
 
         logger.info("Updating the project={}", project);
-        final var createdProject = projectService.update(project);
-        logger.info("Project updated={}", createdProject);
+        final var updatedProject = projectService.update(project);
+        logger.info("Project updated={}", updatedProject);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> merge(@RequestBody Project project)throws NoSuchFieldException,IllegalAccessException {
+        logger.info("Merging the project={}", project);
+        final var updatedProject = projectService.merge(project);
+        logger.info("Project updated={}", updatedProject);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
