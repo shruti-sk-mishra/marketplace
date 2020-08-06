@@ -49,6 +49,9 @@ public class ProjectBid extends BaseDocument {
         String wageType = "wageType";
     }
 
+    // Required for object creation by ObjectMapper.
+    private ProjectBid() {}
+
     public ProjectBid(@NotBlank String projectId, @NotBlank String buyerId, @NotBlank double bidAmount, @NotBlank WageType wageType) {
         this.projectId = projectId;
         this.buyerId = buyerId;
