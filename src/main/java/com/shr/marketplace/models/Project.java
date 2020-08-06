@@ -46,7 +46,7 @@ public class Project extends BaseDocument {
     private Status status;
 
     // Required for object creation by ObjectMapper
-    private Project() {}
+    public Project() {}
 
     public Project(@NotBlank String name, @NotBlank ProjectType type,
                    @NotBlank String description) {
