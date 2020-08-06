@@ -5,6 +5,8 @@ import com.shr.marketplace.models.BaseDocument;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.util.Date;
+
 /**
  *
  *
@@ -21,7 +23,8 @@ public class UpdateRepositoryImpl<T extends BaseDocument> implements UpdateRepos
     public T update(T updatedEntity) {
         BaseDocument existingDocument = (BaseDocument)this.mongoTemplate.findById(updatedEntity.getId(), updatedEntity.getClass());
         if (existingDocument != null) {
-            updatedEntity.setCreatedAt(existingDocument.getCreatedAt());
+            updatedEntity.assignId(existingDocument.getId());
+            updatedEntity.setUpdatedAt(new Date());
             return (T) this.mongoTemplate.save(updatedEntity);
         } else {
             throw new EntityNotFoundException("Could not find entity [" + updatedEntity.getId() + "] for update");

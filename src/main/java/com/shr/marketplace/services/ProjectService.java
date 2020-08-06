@@ -27,6 +27,10 @@ public class ProjectService {
 
     public Project create(Project project) { return projectRepository.create(project); }
 
+    public Project update(Project project) {
+        return projectRepository.update(project);
+    }
+
     public Optional<Project> findById(String id) { return projectRepository.findById(id); }
 
     public List<Project> findAllProjects(int pageStart, int pageSize) {

@@ -16,7 +16,8 @@ import javax.validation.Valid;
  *
  * @author shruti.mishra
  */
-@RestController("project-bid")
+@RestController
+@RequestMapping("/project-bid")
 public class ProjectBidController {
 
     private final ProjectBidService projectBidService;

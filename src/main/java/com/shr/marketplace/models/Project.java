@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
@@ -24,8 +25,7 @@ public class Project extends BaseDocument {
     @Field(Fields.name)
     private String name;
 
-    @NotBlank
-    @Indexed
+    @NotNull
     @Field(Fields.type)
     private ProjectType type;
 

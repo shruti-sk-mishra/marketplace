@@ -5,6 +5,8 @@ import com.shr.marketplace.models.BaseDocument;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.util.Date;
+
 /**
  *
  * @author shruti.mishra
@@ -19,7 +21,10 @@ public class CreateRepositoryImpl<T extends BaseDocument> implements CreateRepos
 
     public T create(T document) {
         try {
-            return (T) this.mongoTemplate.insert(document);
+            final var currentDate = new Date();
+            document.setCreatedAt(currentDate);
+            document.setUpdatedAt(currentDate);
+            return (T)this.mongoTemplate.insert(document);
         } catch (DuplicateKeyException exception) {
             throw new DuplicateEntityException(exception.getMessage(), exception);
         }

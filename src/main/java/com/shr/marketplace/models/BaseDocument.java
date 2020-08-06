@@ -43,7 +43,17 @@ public abstract class BaseDocument extends BaseModel {
         return this.createdAt;
     }
 
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+
+
     }
 }
