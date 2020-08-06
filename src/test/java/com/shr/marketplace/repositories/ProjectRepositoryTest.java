@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -75,6 +76,22 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
 
         final var updatedProject = projectRepository.update(savedProject);
         assertThat(updatedProject.getDescription(), is(projectNewDescription));
+    }
+
+    @Test
+    void shouldMergeProject() throws NoSuchFieldException, IllegalAccessException {
+        final var project = new Project("Project Everest", ProjectType.SOFTWARE, "Project everest is a great project");
+        final var savedProject = projectRepository.create(project);
+
+        assertNotNull(savedProject.getId());
+        assertEquals(savedProject.getStatus(), Project.Status.INACTIVE);
+
+        final var retrievedProject = new Project();
+        retrievedProject.assignId(savedProject.getId());
+        retrievedProject.setStatus(Project.Status.EXPIRED);
+
+        final var mergedProject = projectRepository.merge(retrievedProject);
+        assertEquals(mergedProject.getStatus(), Project.Status.EXPIRED);
     }
 
     @Test
