@@ -31,6 +31,10 @@ public class ProjectService {
         return projectRepository.update(project);
     }
 
+    public Project merge(Project project) throws NoSuchFieldException, IllegalAccessException {
+        return projectRepository.merge(project);
+    }
+
     public Optional<Project> findById(String id) { return projectRepository.findById(id); }
 
     public List<Project> findAllProjects(int pageStart, int pageSize) {
