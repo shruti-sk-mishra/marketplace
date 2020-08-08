@@ -43,6 +43,8 @@ dependencies {
 	testImplementation 'org.apache.httpcomponents:httpclient:4.5.6'
 	testImplementation 'io.github.glytching:junit-extensions:2.3.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 test {
