@@ -22,8 +22,6 @@ public class CreateRepositoryImpl<T extends BaseDocument> implements CreateRepos
     public T create(T document) {
         try {
             final var currentDate = new Date();
-            document.setCreatedAt(currentDate);
-            document.setUpdatedAt(currentDate);
             return (T)this.mongoTemplate.insert(document);
         } catch (DuplicateKeyException exception) {
             throw new DuplicateEntityException(exception.getMessage(), exception);

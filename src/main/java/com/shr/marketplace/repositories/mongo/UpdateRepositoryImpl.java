@@ -1,11 +1,7 @@
 package com.shr.marketplace.repositories.mongo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.shr.marketplace.exceptions.http.EntityNotFoundException;
 import com.shr.marketplace.models.BaseDocument;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.lang.reflect.Field;
