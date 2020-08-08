@@ -28,13 +28,8 @@ public class CacheService {
 
         final var currentDate = new Date();
         final var milliSeconds = expiryDate.getTime() - currentDate.getTime();
-        logger.info("current="+currentDate);
-        logger.info("expiryDate="+expiryDate);
-        logger.info("milliSeconds="+milliSeconds);
         template.opsForValue().set(key, value);
         template.expire( key, milliSeconds, TimeUnit.MILLISECONDS);
-
-        logger.info("value in cache");
-        logger.info(getValue(key).toString());
+        logger.info(getValue(key).toString(), " key added");
     }
 }
