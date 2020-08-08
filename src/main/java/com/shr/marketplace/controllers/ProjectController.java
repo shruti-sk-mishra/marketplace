@@ -26,11 +26,11 @@ public class ProjectController {
 
 
     @PostMapping
-    public ResponseEntity<Project> create(@Valid @RequestBody Project project) {
+    public ResponseEntity<Project> create(@Valid @RequestBody Project project) throws Exception {
 
-        //logger.info("Attempting to create the project={}", project);
+        logger.info("Attempting to create the project={}", project);
         final var createdProject = projectService.create(project);
-        //logger.info("Project created={}", createdProject);
+        logger.info("Project created={}", createdProject);
         return new ResponseEntity<>(createdProject, HttpStatus.CREATED);
     }
 
