@@ -20,12 +20,31 @@ public class ProjectService {
 
 
     private final ProjectRepository projectRepository;
+    private final CacheService cacheService;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(ProjectRepository projectRepository, CacheService cacheService) {
         this.projectRepository = projectRepository;
+        this.cacheService = cacheService;
     }
 
-    public Project create(Project project) { return projectRepository.create(project); }
+    /**
+     * Creates a project
+     *
+     * @param project
+     * @return
+     * @throws Exception
+     */
+    public Project create(Project project) throws Exception {
+        final var createdProject =  projectRepository.create(project);
+        if(createdProject != null) {
+            // set a projectId as key in redis with the
+            // expiry date of project so that the key should expire implicitly
+            this.cacheService.setValue(createdProject.getId(), createdProject.getId(),
+                    createdProject.getExpiresAt());
+            return createdProject;
+        }
+        throw new Exception("Error occurred during the creating project.");
+    }
 
     public Project update(Project project) {
         return projectRepository.update(project);
