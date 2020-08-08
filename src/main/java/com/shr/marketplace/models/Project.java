@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Set;
 
@@ -70,6 +72,10 @@ public class Project extends BaseDocument {
 
     public Set<Requirement> getRequirements() {
         return requirements;
+    }
+
+    private void setExpiresAt(LocalDateTime date) {
+        expiresAt = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public Date getExpiresAt() {
