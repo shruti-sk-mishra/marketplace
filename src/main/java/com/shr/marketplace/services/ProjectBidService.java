@@ -71,4 +71,43 @@ public class ProjectBidService {
     public List<ProjectBid> getByProjectId(String projectId) {
         return projectBidRepository.findByProjectId(projectId);
     }
+
+    /**
+     * Returns the bid with the lowest bid amount
+     * for a project. Since there are two types of wages:
+     * 'Fixed' & 'Hourly'. The comparison should be based be
+     * on which bid yields the minimum amount for completing
+     * the project of certain duration.
+     *
+     * @param projectId
+     * @return
+     */
+    public Optional<ProjectBid> getLowestBidForProject(String projectId) {
+
+        // Get project
+        final var project = projectService.findById(projectId).orElseThrow(() ->
+                new EntityNotFoundException(format("The project with ID [%s] does not exist", projectId)));
+
+        // Get the lowest project bid with wage type of 'Fixed'
+        final var bidsOfFixedWageType = projectBidRepository
+                .findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(projectId, ProjectBid.WageType.FIXED);
+
+        final var lowestBidOfFixedWageType = !bidsOfFixedWageType.isEmpty() ?
+                bidsOfFixedWageType.get(0).getBidAmount() : Double.MAX_VALUE;
+
+        // Get the lowest project bid with wage type of 'Hourly'
+        final var bidsOfHourlyWageType = projectBidRepository
+                .findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(projectId, ProjectBid.WageType.HOURLY);
+
+        // Multiply the lowest hourly bid with project hours to get correct assessment of hourly wages bid
+        final var lowestBidOfHourlyWageType = !bidsOfHourlyWageType.isEmpty() ?
+                bidsOfHourlyWageType.get(0).getBidAmount()  * project.getProjectDurationInHours() :  Double.MAX_VALUE;
+
+        if(lowestBidOfFixedWageType == Double.MAX_VALUE && lowestBidOfHourlyWageType == Double.MAX_VALUE) {
+            logger.info("No bid was placed for the project [{}]", projectId);
+            return Optional.empty();
+        }
+        return lowestBidOfFixedWageType <= lowestBidOfHourlyWageType ?
+                Optional.of(bidsOfFixedWageType.get(0)) : Optional.of(bidsOfHourlyWageType.get(0));
+    }
 }

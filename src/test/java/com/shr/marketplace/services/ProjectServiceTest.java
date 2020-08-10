@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.*;
 
 import java.text.ParseException;
@@ -19,29 +21,39 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 /**
  * @author shruti.mishra
  */
 @ExtendWith(RandomBeansExtension.class)
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ProjectServiceTest {
 
     @Mock
     private ProjectRepository projectRepository;
 
+    @Mock
+    private CacheService cacheService;
+
     @InjectMocks
     private ProjectService projectService;
 
     @Test
-    void shouldCreateProject() {
+    void shouldCreateProject() throws Exception {
 
-        final var projectToSave = new Project("Sample Project", ProjectType.AVIATION, "Project for testing");
-        final var savedProject = new Project("Sample Project", ProjectType.AVIATION, "Project for testing");
+        final var projectToSave = new Project("Sample Project", ProjectType.AVIATION, "Project for testing", 40);
+        final var savedProject = new Project("Sample Project", ProjectType.AVIATION, "Project for testing", 40);
         savedProject.assignId("1");
+        FieldUtils.getField(Project.class, "expiresAt", true).set(savedProject, new Date());
 
         when(projectRepository.create(projectToSave)).thenReturn(savedProject);
+        final var spyCacheService = spy(cacheService);
+        doNothing().when(spyCacheService).setValue(savedProject.getId(), savedProject.getId(), savedProject.getExpiresAt());
+
+
         final var retrievedProject = projectService.create(projectToSave);
         assertEquals(retrievedProject, savedProject);
     }
@@ -115,7 +127,7 @@ public class ProjectServiceTest {
         long endMillis = endDate.getTime();
         for(int i = 1; i <= size; i++) {
             long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
-            Project project = new Project("Project_" + i, ProjectType.SOFTWARE,"This is project " + i);
+            Project project = new Project("Project_" + i, ProjectType.SOFTWARE,"This is project " + i, 40);
             FieldUtils.getField(Project.class, "expiresAt", true)
                     .set(project, new Date(randomMillisSinceEpoch));
             projects.add(project);

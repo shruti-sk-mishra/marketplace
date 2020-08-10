@@ -22,4 +22,6 @@ public interface ProjectBidRepository extends MongoRepository<ProjectBid, String
     List<ProjectBid> findByProjectId(String projectId);
 
     Optional<ProjectBid> findOneByProjectIdAndBuyerId(String projectId, String buyerId);
+
+    List<ProjectBid> findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(String projectId, ProjectBid.WageType wageType);
 }

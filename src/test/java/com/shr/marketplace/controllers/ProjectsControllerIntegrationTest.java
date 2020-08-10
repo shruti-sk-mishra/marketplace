@@ -66,7 +66,7 @@ public class ProjectsControllerIntegrationTest extends BaseTest {
         long endMillis = endDate.getTime();
         for(int i = 1; i <= size; i++) {
             long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
-            Project project = new Project("Project_" + i, ProjectType.SOFTWARE,"This is project " + i);
+            Project project = new Project("Project_" + i, ProjectType.SOFTWARE,"This is project " + i, 40);
             FieldUtils.getField(Project.class, "expiresAt", true)
                     .set(project, new Date(randomMillisSinceEpoch));
             projects.add(project);

@@ -25,9 +25,11 @@ public class CacheService {
     }
 
     public void setValue(final String key, final Object value, Date expiryDate) {
+        final var milliSeconds = expiryDate.getTime() - new Date().getTime();
+        setValue(key, value, milliSeconds);
+    }
 
-        final var currentDate = new Date();
-        final var milliSeconds = expiryDate.getTime() - currentDate.getTime();
+    public void setValue(final String key, final Object value, long milliSeconds) {
         template.opsForValue().set(key, value);
         template.expire( key, milliSeconds, TimeUnit.MILLISECONDS);
         logger.info(getValue(key).toString(), " key added");
