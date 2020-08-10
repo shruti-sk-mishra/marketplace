@@ -44,8 +44,8 @@ public class ProjectServiceTest {
     @Test
     void shouldCreateProject() throws Exception {
 
-        final var projectToSave = new Project("Sample Project", ProjectType.AVIATION, "Project for testing", 40);
-        final var savedProject = new Project("Sample Project", ProjectType.AVIATION, "Project for testing", 40);
+        final var projectToSave = new Project("Sample Project", "sellerId", ProjectType.AVIATION, "Project for testing", 40);
+        final var savedProject = new Project("Sample Project", "sellerId", ProjectType.AVIATION, "Project for testing", 40);
         savedProject.assignId("1");
         FieldUtils.getField(Project.class, "expiresAt", true).set(savedProject, new Date());
 
@@ -95,7 +95,7 @@ public class ProjectServiceTest {
         final var pageRequest = PageRequest.of(pageStart, pageSize, Sort.by(Project.Fields.expiresAt).descending());
         when(projectRepository.findByStatus(Project.Status.ACTIVE, pageRequest)).thenReturn(activeProjects);
 
-        List<Project> retrievedActiveProjects = projectService.findByStatus(Project.Status.ACTIVE, pageStart, pageSize);
+        List<Project> retrievedActiveProjects = projectService.findByStatus(Project.Status.ACTIVE, pageRequest);
 
         assertEquals(retrievedActiveProjects, activeProjects);
     }
@@ -115,7 +115,7 @@ public class ProjectServiceTest {
         Page<Project> page = new PageImpl<>(projects, pageRequest, pageSize);
         when(projectRepository.findAll(pageRequest)).thenReturn(page);
 
-        List<Project> retrievedProjects = projectService.findAllProjects(pageStart, pageSize);
+        List<Project> retrievedProjects = projectService.findAllProjects(pageRequest);
         assertEquals(retrievedProjects, projects);
 
     }
@@ -127,7 +127,7 @@ public class ProjectServiceTest {
         long endMillis = endDate.getTime();
         for(int i = 1; i <= size; i++) {
             long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
-            Project project = new Project("Project_" + i, ProjectType.SOFTWARE,"This is project " + i, 40);
+            Project project = new Project("Project_" + i, "sellerId", ProjectType.SOFTWARE,"This is project " + i, 40);
             FieldUtils.getField(Project.class, "expiresAt", true)
                     .set(project, new Date(randomMillisSinceEpoch));
             projects.add(project);

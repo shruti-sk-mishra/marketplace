@@ -143,7 +143,7 @@ public class ProjectBidServiceTest extends BaseTest {
     @Test
     void shouldGetLowestBidFromFixedWageTypeWhenFixedWageBidSmallerThanHourlyBid(@Random String projectId) throws IllegalAccessException {
 
-        final var project = new Project("Project Everest", ProjectType.SOFTWARE,
+        final var project = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE,
                 "Project everest is a great project", 40);
         project.assignId(projectId);
         project.setStatus(Project.Status.ACTIVE);
@@ -171,7 +171,7 @@ public class ProjectBidServiceTest extends BaseTest {
                                                                                  @Random ProjectBid lowestProjectBidOfFixedWageType,
                                                                                  @Random ProjectBid lowestProjectBidOfHourlyWageType) throws IllegalAccessException {
 
-        final var project = new Project("Project Everest", ProjectType.SOFTWARE,
+        final var project = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE,
                 "Project everest is a great project", 40);
         project.assignId(projectId);
         project.setStatus(Project.Status.ACTIVE);
@@ -206,8 +206,7 @@ public class ProjectBidServiceTest extends BaseTest {
                                                                                  @Random ProjectBid lowestProjectBidOfFixedWageType,
                                                                                  @Random ProjectBid lowestProjectBidOfHourlyWageType) throws IllegalAccessException {
 
-        final var project = new Project("Project Everest", ProjectType.SOFTWARE,
-                "Project everest is a great project", 40);
+        final var project = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE, "Project everest is a great project", 40);
         project.assignId(projectId);
         project.setStatus(Project.Status.ACTIVE);
 

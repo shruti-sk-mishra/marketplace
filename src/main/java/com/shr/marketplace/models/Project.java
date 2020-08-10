@@ -28,6 +28,10 @@ public class Project extends BaseDocument {
     @Field(Fields.name)
     private String name;
 
+    @NotBlank
+    @Field(Fields.sellerId)
+    private String sellerId;
+
     @NotNull
     @Field(Fields.type)
     private ProjectType type;
@@ -55,9 +59,10 @@ public class Project extends BaseDocument {
     // Required for object creation by ObjectMapper
     public Project() {}
 
-    public Project(@NotBlank String name, @NotBlank ProjectType type,
+    public Project(@NotBlank String name, @NotBlank String sellerId, @NotBlank ProjectType type,
                    @NotBlank String description, @NotBlank long projectDurationInHours) {
         this.name = name;
+        this.sellerId = sellerId;
         this.type = type;
         this.description = description;
         this.projectDurationInHours = projectDurationInHours;
@@ -66,6 +71,10 @@ public class Project extends BaseDocument {
 
     public String getName() {
         return name;
+    }
+
+    public String getSellerId() {
+        return sellerId;
     }
 
     public ProjectType getType() {
@@ -108,7 +117,7 @@ public class Project extends BaseDocument {
     }
 
     public interface Fields {
-        String id = "id";
+        String sellerId = "sellerId";
         String name = "name";
         String type = "type";
         String description = "description";

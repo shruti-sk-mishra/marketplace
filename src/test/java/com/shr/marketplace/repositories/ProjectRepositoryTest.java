@@ -53,7 +53,7 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
     void shouldCreateSoftwareProject(@Random CommonRequirement commonRequirement,
                                      @Random DomainRequirement domainRequirement) throws IllegalAccessException {
 
-        final var project = new Project("Project Everest", ProjectType.SOFTWARE,
+        final var project = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE,
                 "Project everest is a great project", 40);
         final var technologyStackRequirements = new TechnologyStackRequirement(Set.of("Java 8", "Spring Boot", "MongoDB"));
         FieldUtils.getField(Requirement.class, "name", true).set(technologyStackRequirements, "Software Requirement");
@@ -82,7 +82,7 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
 
     @Test
     void shouldMergeProject() throws NoSuchFieldException, IllegalAccessException {
-        final var project = new Project("Project Everest", ProjectType.SOFTWARE, "Project everest is a great project", 40);
+        final var project = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE, "Project everest is a great project", 40);
         final var savedProject = projectRepository.create(project);
 
         assertNotNull(savedProject.getId());
@@ -166,7 +166,7 @@ public class ProjectRepositoryTest extends BaseRepositoryTest {
         long endMillis = endDate.getTime();
         for(int i = 1; i <= size; i++) {
             long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
-            Project project = new Project("Project_" + i, ProjectType.SOFTWARE, "This is project " + i, 40);
+            Project project = new Project("Project_" + i, "sellerId", ProjectType.SOFTWARE, "This is project " + i, 40);
             FieldUtils.getField(Project.class, "expiresAt", true).set(project, new Date(randomMillisSinceEpoch));
             FieldUtils.getField(Project.class, "status", true).set(project, status);
             projects.add(project);

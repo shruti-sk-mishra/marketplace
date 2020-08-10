@@ -10,6 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
@@ -36,7 +41,7 @@ public class ProjectsControllerIntegrationTest extends BaseTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void shouldGetActiveApplications() throws Exception {
+    void shouldGetActiveProjects() throws Exception {
 
         final var futureStartCalendar = Calendar.getInstance();
         futureStartCalendar.setTime(new Date());
@@ -52,13 +57,15 @@ public class ProjectsControllerIntegrationTest extends BaseTest {
 
         int pageStart = 0;
         int pageSize = 10;
-        when(projectService.findByStatus(Project.Status.ACTIVE, pageStart, pageSize)).thenReturn(activeProjects);
+        final var pageRequest = PageRequest.of(pageStart, pageSize, Sort.by("createdAt").descending());
+        when(projectService.findByStatus(Project.Status.ACTIVE, pageRequest)).thenReturn(activeProjects);
 
-        mockMvc.perform(get("/projects?status=ACTIVE&pageStart=" + pageStart + "&pageSize=" + pageSize ))
+        final Page<Project> page = new PageImpl<>(activeProjects, pageRequest, activeProjects.size());
+
+        mockMvc.perform(get("/projects?status=ACTIVE&page=0&size=10&sort=createdAt,DESC"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(activeProjects)));
+                .andExpect(content().json(objectMapper.writeValueAsString(page)));
     }
-
     private List<Project> createProjectsListCreatedDuringAnInterval(Date startDate, Date endDate, int size) throws IllegalAccessException {
         final var projects = new ArrayList<Project>();
 
@@ -66,7 +73,7 @@ public class ProjectsControllerIntegrationTest extends BaseTest {
         long endMillis = endDate.getTime();
         for(int i = 1; i <= size; i++) {
             long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
-            Project project = new Project("Project_" + i, ProjectType.SOFTWARE,"This is project " + i, 40);
+            Project project = new Project("Project_" + i, "sellerId", ProjectType.SOFTWARE,"This is project " + i, 40);
             FieldUtils.getField(Project.class, "expiresAt", true)
                     .set(project, new Date(randomMillisSinceEpoch));
             projects.add(project);

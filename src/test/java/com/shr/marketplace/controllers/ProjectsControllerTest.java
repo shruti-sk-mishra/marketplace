@@ -11,6 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -56,11 +60,14 @@ public class ProjectsControllerTest extends BaseTest {
 
         int pageStart = 0;
         int pageSize = 10;
-        when(projectService.findByStatus(Project.Status.ACTIVE, pageStart, pageSize)).thenReturn(activeProjects);
-        final var response = projectsController.getActiveProjects(Project.Status.ACTIVE, pageStart, pageSize);
+        final var pageRequest = PageRequest.of(pageStart, pageSize, Sort.by("createdAt").descending());
+        when(projectService.findByStatus(Project.Status.ACTIVE, pageRequest)).thenReturn(activeProjects);
+        final var response = projectsController.getActiveProjects(Project.Status.ACTIVE, pageRequest);
+
+        final Page<Project> page = new PageImpl<>(activeProjects, pageRequest, activeProjects.size());
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody(), is(activeProjects));
+        assertThat(response.getBody(), is(page));
     }
 
     private List<Project> createProjectsListCreatedDuringAnInterval(Date startDate, Date endDate, int size) throws IllegalAccessException {
@@ -70,7 +77,7 @@ public class ProjectsControllerTest extends BaseTest {
         long endMillis = endDate.getTime();
         for(int i = 1; i <= size; i++) {
             long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
-            Project project = new Project("Project_" + i, ProjectType.SOFTWARE,"This is project " + i, 40);
+            Project project = new Project("Project_" + i, "sellerId", ProjectType.SOFTWARE,"This is project " + i, 40);
             FieldUtils.getField(Project.class, "expiresAt", true)
                     .set(project, new Date(randomMillisSinceEpoch));
             projects.add(project);

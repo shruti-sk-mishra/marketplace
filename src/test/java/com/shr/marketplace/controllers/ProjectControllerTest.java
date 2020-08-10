@@ -66,7 +66,7 @@ public class ProjectControllerTest extends BaseTest {
     void shouldPatchProject(@Random String projectId, @Random Project projectToUpdate) throws Exception {
 
         projectToUpdate.setStatus(Project.Status.EXPIRED);
-        final var projectUpdated = new Project("Project Everest", ProjectType.SOFTWARE, "Project everest is a great project",
+        final var projectUpdated = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE, "Project everest is a great project",
                 40);
         projectUpdated.assignId(projectId);
 
