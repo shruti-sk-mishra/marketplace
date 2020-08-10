@@ -45,6 +45,7 @@ public class UpdateRepositoryImpl<T extends BaseDocument> implements UpdateRepos
     }
 
     private T updateTheDocument(T updatedEntity) {
+        updatedEntity.setCreatedAt(updatedEntity.getCreatedAt());
         updatedEntity.setUpdatedAt(new Date());
         return (T) this.mongoTemplate.save(updatedEntity);
     }
@@ -56,7 +57,7 @@ public class UpdateRepositoryImpl<T extends BaseDocument> implements UpdateRepos
             String name = field.getName();
             Object value = field.get(source);
             //If it is a non null value copy to destination
-            if (null != value) {
+            if (null != value && !BaseDocument.auditingFields.contains(name)) {
                 Field destField = destination.getClass().getDeclaredField(name);
                 destField.setAccessible(true);
                 destField.set(destination, value);

@@ -107,7 +107,11 @@ public class ProjectBidService {
             logger.info("No bid was placed for the project [{}]", projectId);
             return Optional.empty();
         }
-        return lowestBidOfFixedWageType <= lowestBidOfHourlyWageType ?
+        if(lowestBidOfFixedWageType == lowestBidOfHourlyWageType) {
+            return bidsOfFixedWageType.get(0).getCreatedAt().compareTo(bidsOfHourlyWageType.get(0).getCreatedAt()) <= 0 ?
+                    Optional.of(bidsOfFixedWageType.get(0)) : Optional.of(bidsOfHourlyWageType.get(0));
+        }
+        return lowestBidOfFixedWageType < lowestBidOfHourlyWageType ?
                 Optional.of(bidsOfFixedWageType.get(0)) : Optional.of(bidsOfHourlyWageType.get(0));
     }
 }

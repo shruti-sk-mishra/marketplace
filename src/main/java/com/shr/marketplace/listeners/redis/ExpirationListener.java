@@ -37,7 +37,7 @@ public class ExpirationListener implements MessageListener {
                 } else {
                     // set it as the 'selected bid' into the project object
                     expiredProject.setSelectedBidId(lowestProjectBid.get().getId());
-                    final var expiredProjectWithSelectedBid = projectService.merge(expiredProject);
+                    final var expiredProjectWithSelectedBid = projectService.update(expiredProject);
                     if(expiredProjectWithSelectedBid != null) {
                         logger.info("Selected lowest bid for project[{}]=[{}]", projectId, lowestProjectBid);
                     } else {

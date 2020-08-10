@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -57,7 +59,12 @@ public abstract class BaseDocument extends BaseModel {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
 
-
+    public static Set<String> auditingFields = new HashSet<>();
+    static {
+        auditingFields.add("createdAt");
+        auditingFields.add("updatedAt");
+        auditingFields.add("version");
     }
 }
