@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -35,6 +36,10 @@ public class Project extends BaseDocument {
     @Field(Fields.description)
     private String description;
 
+    @Min(1)
+    @Field(Fields.projectDurationInHours)
+    private long projectDurationInHours;
+
     @Field(Fields.requirements)
     private Set<Requirement> requirements;
 
@@ -51,10 +56,11 @@ public class Project extends BaseDocument {
     public Project() {}
 
     public Project(@NotBlank String name, @NotBlank ProjectType type,
-                   @NotBlank String description) {
+                   @NotBlank String description, @NotBlank long projectDurationInHours) {
         this.name = name;
         this.type = type;
         this.description = description;
+        this.projectDurationInHours = projectDurationInHours;
         status = Status.INACTIVE;
     }
 
@@ -72,6 +78,10 @@ public class Project extends BaseDocument {
 
     public Set<Requirement> getRequirements() {
         return requirements;
+    }
+
+    public long getProjectDurationInHours() {
+        return projectDurationInHours;
     }
 
     private void setExpiresAt(LocalDateTime date) {
@@ -93,6 +103,10 @@ public class Project extends BaseDocument {
         return status;
     }
 
+    public void setSelectedBidId(String selectedBidId) {
+        this.selectedBidId = selectedBidId;
+    }
+
     public interface Fields {
         String id = "id";
         String name = "name";
@@ -102,6 +116,7 @@ public class Project extends BaseDocument {
         String expiresAt = "expiresAt";
         String selectedBidId = "selectedBidId";
         String status = "status";
+        String projectDurationInHours = "projectDurationInHours";
     }
 
     public enum Status {
