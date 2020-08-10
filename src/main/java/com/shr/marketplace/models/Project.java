@@ -42,7 +42,7 @@ public class Project extends BaseDocument {
 
     @Min(1)
     @Field(Fields.projectDurationInHours)
-    private long projectDurationInHours;
+    private Long projectDurationInHours;
 
     @Field(Fields.requirements)
     private Set<Requirement> requirements;
@@ -66,7 +66,7 @@ public class Project extends BaseDocument {
         this.type = type;
         this.description = description;
         this.projectDurationInHours = projectDurationInHours;
-        status = Status.INACTIVE;
+        this.status = Status.INACTIVE;
     }
 
     public String getName() {

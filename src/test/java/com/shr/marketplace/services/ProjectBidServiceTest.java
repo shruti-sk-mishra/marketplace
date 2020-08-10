@@ -11,6 +11,7 @@ import com.shr.marketplace.repositories.ProjectBidRepository;
 import io.github.glytching.junit.extension.random.Random;
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -231,6 +233,97 @@ public class ProjectBidServiceTest extends BaseTest {
         // 500 is the fixed cost to cover 40 hours of project work & if we consider
         // per hour wage, then it would take perHourBidAmount * projectDurationHours
         // i.e turns out to be 400
+        assertTrue(lowestProjectBid.isPresent());
+        assertEquals(lowestProjectBid.get(), lowestProjectBidOfHourlyWageType);
+    }
+
+    @Test
+    void shouldGetLowestBidOfHourlyWageInCaseOfSameLowestBidsOfBothWageTypesButHourlyBidCameBeforeFixedOne(@Random String projectId,
+                                                                                  @Random ProjectBid lowestProjectBidOfFixedWageType,
+                                                                                  @Random ProjectBid lowestProjectBidOfHourlyWageType) throws IllegalAccessException {
+
+        final var project = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE, "Project everest is a great project", 50);
+        project.assignId(projectId);
+        project.setStatus(Project.Status.ACTIVE);
+
+        FieldUtils.getField(ProjectBid.class, "wageType", true).set(lowestProjectBidOfFixedWageType, ProjectBid.WageType.FIXED);
+        FieldUtils.getField(ProjectBid.class, "wageType", true).set(lowestProjectBidOfHourlyWageType, ProjectBid.WageType.HOURLY);
+
+        FieldUtils.getField(ProjectBid.class, "bidAmount", true).set(lowestProjectBidOfFixedWageType, 500);
+        FieldUtils.getField(ProjectBid.class, "bidAmount", true).set(lowestProjectBidOfHourlyWageType, 10);
+
+        Date now = new Date(); //now
+        final var fiveMinutesLater = DateUtils.addMinutes(now, 5);
+        FieldUtils.getField(ProjectBid.class, "createdAt", true).set(lowestProjectBidOfHourlyWageType, now);
+        FieldUtils.getField(ProjectBid.class, "createdAt", true).set(lowestProjectBidOfFixedWageType, fiveMinutesLater);
+
+        doReturn(Optional.of(project)).when(projectService).findById(anyString());
+        when(projectBidRepository
+                .findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(projectId, ProjectBid.WageType.FIXED))
+                .thenReturn(List.of(lowestProjectBidOfFixedWageType));
+
+        when(projectBidRepository
+                .findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(projectId, ProjectBid.WageType.HOURLY))
+                .thenReturn(List.of(lowestProjectBidOfHourlyWageType));
+
+        final var lowestProjectBid = projectBidService.getLowestBidForProject(projectId);
+
+        // The lowest bid should be of hourly wage type because
+        // 500 is the fixed cost to cover 40 hours of project work & if we consider
+        // per hour wage, then it would take perHourBidAmount * projectDurationHours
+        // i.e turns out to be 400
+        assertTrue(lowestProjectBid.isPresent());
+        assertEquals(lowestProjectBid.get(), lowestProjectBidOfHourlyWageType);
+    }
+
+    @Test
+    void shouldGetLowestBidOfFixedyWageInCaseInCaseThereIsNoHourlyBid(@Random String projectId, @Random ProjectBid lowestProjectBidOfFixedWageType) throws IllegalAccessException {
+
+        final var project = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE, "Project everest is a great project", 50);
+        project.assignId(projectId);
+        project.setStatus(Project.Status.ACTIVE);
+
+        FieldUtils.getField(ProjectBid.class, "wageType", true).set(lowestProjectBidOfFixedWageType, ProjectBid.WageType.FIXED);
+
+        FieldUtils.getField(ProjectBid.class, "bidAmount", true).set(lowestProjectBidOfFixedWageType, 500);
+
+        doReturn(Optional.of(project)).when(projectService).findById(anyString());
+        when(projectBidRepository
+                .findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(projectId, ProjectBid.WageType.FIXED))
+                .thenReturn(List.of(lowestProjectBidOfFixedWageType));
+
+        when(projectBidRepository
+                .findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(projectId, ProjectBid.WageType.HOURLY))
+                .thenReturn(Collections.emptyList());
+
+        final var lowestProjectBid = projectBidService.getLowestBidForProject(projectId);
+
+        assertTrue(lowestProjectBid.isPresent());
+        assertEquals(lowestProjectBid.get(), lowestProjectBidOfFixedWageType);
+    }
+
+    @Test
+    void shouldGetLowestBidOfHourlyWageInCaseInCaseThereIsNoFixedlyBid(@Random String projectId, @Random ProjectBid lowestProjectBidOfHourlyWageType) throws IllegalAccessException {
+
+        final var project = new Project("Project Everest", "sellerId", ProjectType.SOFTWARE, "Project everest is a great project", 50);
+        project.assignId(projectId);
+        project.setStatus(Project.Status.ACTIVE);
+
+        FieldUtils.getField(ProjectBid.class, "wageType", true).set(lowestProjectBidOfHourlyWageType, ProjectBid.WageType.HOURLY);
+
+        FieldUtils.getField(ProjectBid.class, "bidAmount", true).set(lowestProjectBidOfHourlyWageType, 500);
+
+        doReturn(Optional.of(project)).when(projectService).findById(anyString());
+        when(projectBidRepository
+                .findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(projectId, ProjectBid.WageType.FIXED))
+                .thenReturn(Collections.emptyList());
+
+        when(projectBidRepository
+                .findByProjectIdAndWageTypeOrderByBidAmountAscCreatedAtAsc(projectId, ProjectBid.WageType.HOURLY))
+                .thenReturn(List.of(lowestProjectBidOfHourlyWageType));
+
+        final var lowestProjectBid = projectBidService.getLowestBidForProject(projectId);
+
         assertTrue(lowestProjectBid.isPresent());
         assertEquals(lowestProjectBid.get(), lowestProjectBidOfHourlyWageType);
     }
