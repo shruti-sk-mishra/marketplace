@@ -1,20 +1,17 @@
 package com.shr.marketplace.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shr.marketplace.config.BaseTest;
+import com.shr.marketplace.config.BaseMVCTest;
 import com.shr.marketplace.models.Project;
 import com.shr.marketplace.models.ProjectType;
 import com.shr.marketplace.services.ProjectService;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,16 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author shruti.mishra
  */
 @WebMvcTest(controllers = ProjectsController.class)
-public class ProjectsControllerIntegrationTest extends BaseTest {
-
-    @Autowired
-    private MockMvc mockMvc;
+public class ProjectsControllerIntegrationTest extends BaseMVCTest {
 
     @MockBean
     private ProjectService projectService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     void shouldGetActiveProjects() throws Exception {
