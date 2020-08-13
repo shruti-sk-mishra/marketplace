@@ -17,7 +17,6 @@ import java.util.Optional;
 public class SellerService {
     private SellerRepository sellerRepository;
 
-    public Optional<Seller> get(String id) {
-        return sellerRepository.findById(id);
-    }
+    public Seller create(Seller seller) { return sellerRepository.create(seller); }
+    public Optional<Seller> findById(String id) { return sellerRepository.findById(id); }
 }
