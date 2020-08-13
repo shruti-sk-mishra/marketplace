@@ -58,7 +58,7 @@ public class ProjectControllerTest extends BaseTest {
 
         projectUpdated.assignId(projectId);
         when(projectService.update(projectToUpdate)).thenReturn(projectUpdated);
-        final var response = projectController.update(projectToUpdate);
+        final var response = projectController.update(projectId, projectToUpdate);
 
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
         assertNull(response.getBody());
@@ -73,7 +73,7 @@ public class ProjectControllerTest extends BaseTest {
         projectUpdated.assignId(projectId);
 
         when(projectService.merge(projectToUpdate)).thenReturn(projectUpdated);
-        final var response = projectController.merge(projectToUpdate);
+        final var response = projectController.merge(projectId, projectToUpdate);
 
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
         assertNull(response.getBody());

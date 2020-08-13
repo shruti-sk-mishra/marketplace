@@ -33,24 +33,24 @@ public class ProjectController {
     }
     @PostMapping
     public ResponseEntity<Project> create(@Valid @RequestBody Project project) throws Exception {
-
         logger.info("Attempting to create the project={}", project);
         final var createdProject = projectService.create(project);
         logger.info("Project created={}", createdProject);
         return new ResponseEntity<>(createdProject, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<Void> update(@RequestBody Project project) {
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable("id") String projectId, @RequestBody Project project) {
+        project.assignId(projectId);
         logger.info("Updating the project={}", project);
         final var updatedProject = projectService.update(project);
         logger.info("Project updated={}", updatedProject);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping
-    public ResponseEntity<Void> merge(@RequestBody Project project)throws NoSuchFieldException,IllegalAccessException {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> merge(@PathVariable("id") String projectId, @RequestBody Project project)throws NoSuchFieldException,IllegalAccessException {
+        project.assignId(projectId);
         logger.info("Merging the project={}", project);
         final var updatedProject = projectService.merge(project);
         logger.info("Project updated={}", updatedProject);
