@@ -1,4 +1,4 @@
-package com.shr.marketplace.config.mongo;
+package com.shr.marketplace.config;
 
 import org.jeasy.random.EasyRandom;
 import org.springframework.test.context.ActiveProfiles;

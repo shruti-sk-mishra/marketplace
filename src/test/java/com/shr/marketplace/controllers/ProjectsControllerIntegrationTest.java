@@ -1,7 +1,7 @@
 package com.shr.marketplace.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shr.marketplace.config.mongo.BaseTest;
+import com.shr.marketplace.config.BaseTest;
 import com.shr.marketplace.models.Project;
 import com.shr.marketplace.models.ProjectType;
 import com.shr.marketplace.services.ProjectService;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;

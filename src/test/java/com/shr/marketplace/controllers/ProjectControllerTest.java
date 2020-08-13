@@ -1,6 +1,6 @@
 package com.shr.marketplace.controllers;
 
-import com.shr.marketplace.config.mongo.BaseTest;
+import com.shr.marketplace.config.BaseTest;
 import com.shr.marketplace.models.Project;
 import com.shr.marketplace.models.ProjectType;
 import com.shr.marketplace.services.ProjectService;

@@ -1,5 +1,6 @@
 package com.shr.marketplace.config.mongo;
 
+import com.shr.marketplace.config.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

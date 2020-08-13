@@ -1,6 +1,6 @@
 package com.shr.marketplace.services;
 
-import com.shr.marketplace.config.mongo.BaseTest;
+import com.shr.marketplace.config.BaseTest;
 import com.shr.marketplace.models.Buyer;
 import com.shr.marketplace.repositories.BuyerRepository;
 import io.github.glytching.junit.extension.random.Random;
