@@ -18,6 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit test cases for
@@ -49,5 +50,13 @@ class BuyerServiceTest extends BaseTest {
 
         final var retrievedBuyer = buyerService.get(buyerId);
         assertFalse(retrievedBuyer.isPresent());
+    }
+
+    @Test
+    void shouldCreateBuyer(@Random Buyer buyerToBeCreated, @Random Buyer buyerCreated) {
+        when(buyerRepository.create(buyerToBeCreated)).thenReturn(buyerCreated);
+
+        final var persistedBuyer = buyerService.create(buyerToBeCreated);
+        assertEquals(persistedBuyer, buyerCreated);
     }
 }
