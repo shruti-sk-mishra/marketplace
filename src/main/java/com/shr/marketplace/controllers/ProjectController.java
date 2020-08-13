@@ -25,6 +25,12 @@ public class ProjectController {
         }
 
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Project> get(@PathVariable("id") String projectId) {
+        final var project = projectService.findById(projectId);
+        return project.map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
     @PostMapping
     public ResponseEntity<Project> create(@Valid @RequestBody Project project) throws Exception {
 

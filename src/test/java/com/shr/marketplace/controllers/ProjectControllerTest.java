@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -74,6 +76,23 @@ public class ProjectControllerTest extends BaseTest {
         final var response = projectController.merge(projectToUpdate);
 
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void shouldGetProjectByIdWhenIdExists(@Random String projectId, @Random Project project) {
+        when(projectService.findById(projectId)).thenReturn(Optional.of(project));
+
+        final var response = projectController.get(projectId);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), is(project));
+    }
+    @Test
+    void shouldReturnNotFoundHttpStatusOnGetProjectByIdWhenIdDoesNotExist(@Random String projectId) {
+        when(projectService.findById(projectId)).thenReturn(Optional.empty());
+
+        final var response = projectController.get(projectId);
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
         assertNull(response.getBody());
     }
 }
