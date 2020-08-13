@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
+ * Contains the endpoints for
+ * Seller entity
+ *
  * @author shruti.mishra
  */
 @RestController

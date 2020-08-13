@@ -44,7 +44,7 @@ public class SellerControllerTest extends BaseTest {
         assertThat(response.getBody(), is(seller));
     }
     @Test
-    void shouldReturnNotFoundHttpStatusOnGetProjectByIdWhenIdDoesNotExist(@Random String sellerId) {
+    void shouldReturnNotFoundHttpStatusOnGetSellerByIdWhenIdDoesNotExist(@Random String sellerId) {
         when(sellerService.findById(sellerId)).thenReturn(Optional.empty());
 
         final var response = sellerController.get(sellerId);
