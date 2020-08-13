@@ -40,7 +40,7 @@ class BuyerServiceTest extends BaseTest {
         buyer.assignId(buyerId);
         when(buyerRepository.findById(buyerId)).thenReturn(Optional.of(buyer));
 
-        final var retrievedBuyer = buyerService.get(buyerId);
+        final var retrievedBuyer = buyerService.findById(buyerId);
         assertThat(retrievedBuyer, optionalWithValue(is(buyer)));
     }
 
@@ -48,7 +48,7 @@ class BuyerServiceTest extends BaseTest {
     void shouldNotGetBuyerByIdWhenIdDoesNotExist(@Random String buyerId) {
         when(buyerRepository.findById(buyerId)).thenReturn(Optional.empty());
 
-        final var retrievedBuyer = buyerService.get(buyerId);
+        final var retrievedBuyer = buyerService.findById(buyerId);
         assertFalse(retrievedBuyer.isPresent());
     }
 
