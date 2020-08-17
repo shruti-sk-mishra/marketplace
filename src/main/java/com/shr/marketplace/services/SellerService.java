@@ -15,7 +15,11 @@ import java.util.Optional;
  */
 @Service
 public class SellerService {
-    private SellerRepository sellerRepository;
+    private final SellerRepository sellerRepository;
+
+    public SellerService(SellerRepository sellerRepository) {
+        this.sellerRepository = sellerRepository;
+    }
 
     public Seller create(Seller seller) { return sellerRepository.create(seller); }
     public Optional<Seller> findById(String id) { return sellerRepository.findById(id); }

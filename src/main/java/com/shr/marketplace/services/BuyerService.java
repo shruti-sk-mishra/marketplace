@@ -15,7 +15,11 @@ import java.util.Optional;
  */
 @Service
 public class BuyerService {
-    private BuyerRepository buyerRepository;
+    private final BuyerRepository buyerRepository;
+
+    public BuyerService(BuyerRepository buyerRepository) {
+        this.buyerRepository = buyerRepository;
+    }
 
     public Buyer create(Buyer buyer) { return buyerRepository.create(buyer); }
     public Optional<Buyer> findById(String id) {
